@@ -16,7 +16,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-
+#Importation of pictures
 def generate(path,max_images_per_class=1000):
     images = []
     labels = []
@@ -75,14 +75,17 @@ labels2=transformer.fit_transform(labels2)
 
 labels2=np.array(labels2).reshape((len(labels2),1))
 
+#Split of the dataset
 
 X_train,X_test=train_test_split(images2, test_size=0.2)
 y_train,y_test=train_test_split(labels2, test_size=0.2)
 
+#Normalization of data
+
 X_train=X_train/255
 X_test=X_test/255
 
-
+#The model
 
 model=keras.Sequential([
     keras.Input((300,300,3)),
@@ -116,3 +119,13 @@ model.compile(
     )
 
 model.fit(X_train,y_train,epochs=5,verbose=2)
+
+#To make new predictions
+
+def prediction(picture_path):
+  pic=Image.open(picture_path)
+  pic=pic.resize(300,300)
+  pic=np.array(pic)
+  pic=np.expand_dims(picture,axis=0)
+  return np.argmax(model.predict(pic))
+
